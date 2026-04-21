@@ -40,7 +40,7 @@ bones 	  N * (^ PRED) = 'bone'
 	      (^ NUM) = pl
 	      (^ PERS) = 3. 
 
-bone 	  N * "forgotten to add a pred value" 
+bone  N *  (^ PRED) = 'bone'  "forgotten to add a pred value" 
 	      (^ NUM) = sg
 	      (^ PERS) = 3. 
 
