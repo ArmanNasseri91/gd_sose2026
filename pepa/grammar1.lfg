@@ -79,6 +79,8 @@ PAST-BE-3SG = (^ TENSE) = past
 
 MOOD-IND = (^ MOOD) = indicative.
 
+ASPECT-SIMP = (^ ASPECT) = simple.
+
 SG-3PERS = (^ NUM) = sg
            (^ PERS) = 3.
 
@@ -176,41 +178,49 @@ bananas N * (^ PRED) = 'banana'
 
 devours   V * 
 	    @MOOD-IND
+            @ASPECT-SIMP
             @PRES3SG
 	    @(TRANS devour).
 
 appears   V * 
 	    @MOOD-IND
+            @ASPECT-SIMP
             @PRES3SG
 	    @(INTRANS appear).
 
 sleeps    V *
 	    @MOOD-IND
+            @ASPECT-SIMP
             @PRES3SG
 	    @(INTRANS sleep).
 
 chase     V*
             @MOOD-IND
+            @ASPECT-SIMP
             @PRES-NON3SG
             @(TRANS chase).
 
 chases   V * 
 	    @MOOD-IND
+            @ASPECT-SIMP
             @PRES3SG
 	    @(TRANS chase).
 
 eat     V*
             @MOOD-IND
+            @ASPECT-SIMP
             @PRES-NON3SG
             @(OPT-TRANS eat).
 
 eats   V * 
 	    @MOOD-IND
+            @ASPECT-SIMP
             @PRES3SG
 	    @(OPT-TRANS eat).
 
 see     V*
             @MOOD-IND
+            @ASPECT-SIMP
             @PRES-NON3SG
             @(OPT-TRANS see).
 

@@ -1,10 +1,10 @@
 #1 - Intransitive verb
 
-the cat sleeps (1 0.009 8)
+the cat sleeps (1 0.003 8)
 
 #2 - Transitive verb (3rd person singular)
 
-the dog devours the bone (1 0.003 13)
+the dog devours the bone (1 0.002 13)
 
 #3 - Transitive verb (3rd person plural)
 
@@ -12,11 +12,11 @@ the cats chase a mouse (1 0.002 13)
 
 #4 - The verb "eat" as intransitive
 
-the dog eats (1 0.001 8)
+the dog eats (1 0.002 8)
 
 #5 - The verb "eat" as transitive
 
-the cats eat a treat (1 0.001 13)
+the cats eat a treat (1 0.005 13)
 
 #6 - Subject and verb don't agree
 
@@ -62,4 +62,4 @@ the dog was slept (0 0.001 0)
 
 the girl was a banana (0 0.001 0)
 
-# 16 sentences, 0.026 CPU secs total, 0.009 CPU secs max (05/07/26)
+# 16 sentences, 0.026 CPU secs total, 0.005 CPU secs max (05/07/26)
