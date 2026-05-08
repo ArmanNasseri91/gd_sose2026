@@ -35,7 +35,8 @@ DEMO ENGLISH TEMPLATES (1.0)
 
 TRANS(P) = @(PASS (^ PRED) = 'P<(^ SUBJ) (^ OBJ)>').
 
-INTRANS(P) = (^ PRED) = 'P<(^ SUBJ)>'.
+INTRANS(P) = (^ PRED) = 'P<(^ SUBJ)>'
+	     (^ PASSIVE) = -.
 
 OPT-TRANS(P) = { @(INTRANS P) | @(TRANS P) }.
 
