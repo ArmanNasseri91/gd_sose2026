@@ -185,8 +185,7 @@ the	D *  (^ DEF) = +.
 
 a	D *  (^ DEF) = -.
 
-by	P *  (^ PTYPE) = sem
-	     (^ PSEM) = ag.
+by	P *  (^ PFORM) = by.
 
 was	AUX * @PAST-TNS
 	      (^ PASSIVE) = +

@@ -1,10 +1,10 @@
 #correct sentence 1 - intransitive verb
 
-the cat sleeps (1 0.008 8)
+the cat sleeps (1 0.005 8)
 
 #correct sentence 2 - transitive verb
 
-the dog devours the bone (1 0.003 13)
+the dog devours the bone (1 0.002 13)
 
 #correct sentence 3 - transitive verb
 
@@ -58,4 +58,4 @@ the girl was saw by the gorilla (0 0.001 0)
 
 the dog was slept (0 0.001 0)
 
-# 15 sentences, 0.027 CPU secs total, 0.008 CPU secs max (05/08/26)
+# 15 sentences, 0.025 CPU secs total, 0.005 CPU secs max (05/08/26)
