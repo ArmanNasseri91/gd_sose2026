@@ -18,30 +18,50 @@ DEMO   ENGLISH   RULES (1.0)
 	     (! CASE)=nom;
  	 VP: ^=!.
 
-   VP --> (AUX)				"auxiliary introduced for passive"
+   VP --> (AUX)                  	"auxiliary introduced for passive" 
           V: ^=!; 
- 	  (NP: (^ OBJ)=!		"optional direct object"
-	       (! CASE)=acc)
-          (PP: (^ OBL-AG) = !).		"oblique agent of passive"
+          (NP: (^ OBJ)=!         	"optional direct object"
+               (! CASE)=acc)
+          (NP: (^ OBJ2)=!)       	"restricted obj of di-transitives"
+           
+          PP*: { ! $ (^ ADJUNCT) 	"PPs can be adjuncts"
+                     (! PTYPE) =c sem 	"only semantic PPs here"
+                       | 
+                      (^ OBL) = ! 	"or a a general oblique"
+                        };
+          (PP: (^ OBL-TO) = !)   	"oblique beneficiary of di-trn"
+          (PP: (^ OBL-AG) = !).  	"oblique agent of passive"
 
-   NP --> (D)  "can leave out ^=!"
- 	  N. 
+   NP --> (D)  			 	"optional determiner, can leave out ^=!"
+          AP*: ! $ (^ ADJUNCT);		"introducing adjectives in sets"
+ 	  N				"head NP"
+          PP*: ! $ (^ ADJUNCT)		"PPs modifying NPs"
+                   (! PTYPE) =c sem.	"have to be semantic"
 
-   PP --> P				"will be expanded on"
-          NP.
+   PP --> { P: ^ = !			"head of PP"
+                (! PTYPE) =c sem;	"semantic type, Adjunct"
+            NP: (^ OBJ) = !		
+                (! CASE) = acc;
+          | P: ^ = !			"head of PP"
+                (! PTYPE) =c nosem;	"non-semantic type, OBL"
+                NP }.
 
 ----
 
 DEMO ENGLISH TEMPLATES (1.0)
 
 "count noun singular"
-CNS(P) = (^ PRED)='P' 
-         (^ NUM)= sg 
+CNS(P) = (^ PRED) ='P' 
+         (^ NUM) = sg
          (^ DEF).
 
 "count noun plural"
 CNP(P) = (^ PRED)='P' 
          (^ NUM)= pl.
+
+"proper noun"
+PN(P) = (^ PRED) ='P' 
+        (^ NUM) = sg.
 
 "present 3rd person singular"
 PRES3SG = (^ TENSE) = pres
@@ -76,19 +96,33 @@ TRANS(P) = @(PASS (^ PRED)='P<(^ SUBJ)(^ OBJ)>').
 "optionally transitive verbs"
 OPTTRANS(P) = { @(INTRANS P) | @(TRANS P) }. 
 
+DITRANS(P) = @(PASS @(DAT-SHIFT (^ PRED)='P<(^ SUBJ) (^ OBJ)
+              (^ OBL-TO)>')).
+
 "passive"
 PASS(FRAME) = { FRAME 				"no passive, just give back subcat frame"
                  (^ PASSIVE) = - 		"no passive"
                | FRAME 				"passive"
                  (^ PASSIVE) = + 		"mark as such"
                  (^ PARTICIPLE) =c past 	"make sure to have a past participle"
-                 (^ OBJ)-->(^ SUBJ) 		"obj goes to subj; only (at least) transitives"
-                 { (^ SUBJ)-->(^ OBL-AG) 	"either make subj obl-ag"
-                 | (^ SUBJ)--> NULL 		"or delete"
+                 (^ OBJ) --> (^ SUBJ) 		"obj goes to subj; only (at least) transitives"
+                 { (^ SUBJ) --> (^ OBL-AG) 	"either make subj obl-ag"
+                 | (^ SUBJ) --> NULL 		"or delete"
                  }
                }.
 
 PASTP = (^ PARTICIPLE) = past.
+
+DAT-SHIFT(FRAME) = { FRAME 
+                    | FRAME 
+                      (^ OBJ)-->(^ OBJ2)
+                      (^ OBL-TO)-->(^ OBJ)}.
+
+"template for most prepositions"
+PREP(P) = { (^ PRED) = 'P<(^OBJ)>' 
+            (^ PTYPE) = sem
+          | (^ PTYPE) = nosem
+            (^ PFORM) = P}.
 
 ----
 
@@ -97,14 +131,22 @@ DEMO ENGLISH LEXICON (1.0)
 
 "determiners"
 
-the  D *  (^ DEF) = +.
+the  	  D *  (^ DEF) = +.
 
-a   D *  (^ DEF) = -.
+a   	  D *  (^ DEF) = -.
 
 
 "prepositions"
 
-by        P * (^ PFORM) = by.
+by        P * @(PREP by).
+
+to        P * @(PREP to).	  
+
+on        P * @(PREP on).
+
+in        P * @(PREP in).
+
+with      P * @(PREP with).
 
 
 "auxiliaries"
@@ -114,13 +156,18 @@ was       AUX * (^ TENSE) = past
                |(^ SUBJ PERS) = 3}
                 (^ SUBJ NUM) = sg.
 
-"verbs"
+"verbs transitive"
 
-	"transitive"
+argue      V * @(TRANS argue) @PRES3PL.
+argues     V * @(TRANS argue) @PRES3SG.
+argued     V * @(TRANS argue)
+              {(^ TENSE) = past
+               (^ MOOD) = ind
+              | @PASTP}.
 
-chase    V * @(TRANS chase) @PRES3PL.
-chases   V * @(TRANS chase) @PRES3SG.
-chased   V * @(TRANS chase) @PASTP.
+chase     V * @(TRANS chase) @PRES3PL.
+chases    V * @(TRANS chase) @PRES3SG.
+chased    V * @(TRANS chase) @PASTP.
 
 devour    V * @(TRANS devour) @PRES3PL.
 devours   V * @(TRANS devour) @PRES3SG.
@@ -129,25 +176,67 @@ devoured  V * @(TRANS devour)
                (^ MOOD) = ind
               | @PASTP}.
 
-eat       V * @(OPTTRANS eat) @PRES3PL
+eat       V * @(OPTTRANS eat) @PRES3PL.
 eats      V * @(OPTTRANS eat) @PRES3SG.
 eaten     V * @(TRANS eat) @PASTP.
 
 see       V * @(TRANS see) @PRES3PL.
 sees      V * @(TRANS see) @PRES3SG.
+saw       V * @(TRANS see)
+               (^ TENSE) = past
+               (^ MOOD) = ind.
 seen      V * @(TRANS see) @PASTP.
 
+talk      V * @(OPTTRANS talk) @PRES3PL.
+talks     V * @(OPTTRANS talk) @PRES3SG.
+talked    V * @(OPTTRANS talk)
+              {(^ TENSE) = past
+               (^ MOOD) = ind
+              | @PASTP}.
 
-	"intransitive"
+wait      V * @(TRANS wait) @PRES3PL.
+waits     V * @(TRANS wait) @PRES3SG.
+waited    V * @(TRANS wait)
+              {(^ TENSE) = past
+               (^ MOOD) = ind
+              | @PASTP}.
+
+"verbs intransitive"
 
 appear    V * @(INTRANS appear) @PRES3PL.
 appears   V * @(INTRANS appear) @PRES3SG.
+appeared  V * @(INTRANS appear)
+              {(^ TENSE) = past
+               (^ MOOD) = ind
+              | @PASTP}.
 
-sleep    V * @(INTRANS sleep) @PRES3PL.
-sleeps   V * @(INTRANS sleep) @PRES3SG.
+sleep     V * @(INTRANS sleep) @PRES3PL.
+sleeps    V * @(INTRANS sleep) @PRES3SG.
+slept     V * @(INTRANS sleep)
+              {(^ TENSE) = past
+               (^ MOOD) = ind
+              | @PASTP}.
 
+sit       V * @(INTRANS sit) @PRES3PL.
+sits      V * @(INTRANS sit) @PRES3SG.
+sat       V * @(INTRANS sit)
+              {(^ TENSE) = past
+               (^ MOOD) = ind
+              | @PASTP}.
+
+
+"verbs ditransitive"
+
+give      V * @(DITRANS give) @PRES3PL.
+gives     V * @(DITRANS give) @PRES3SG.
+gave 	  V * @(DITRANS give)
+               (^ TENSE) = past
+               (^ MOOD) = ind.
+given     V * @(DITRANS give) @PASTP.
 
 "nouns"
+
+Alex      N * @(PN Alex).
 
 cake 	  N * @(CNS cake).
 cakes 	  N * @(CNP cake).
@@ -158,8 +247,14 @@ cats 	  N * @(CNP cat).
 banana 	  N * @(CNS banana).
 bananas   N * @(CNP banana).
 
+bench 	  N * @(CNS bench).
+benches   N * @(CNP bench).
+
 bone 	  N * @(CNS bone).
 bones	  N * @(CNP bone).
+
+book      N * @(CNS book).
+books     N * @(CNP book).
 
 dog       N * @(CNS dog).
 dogs      N * @(CNP dog).
@@ -170,10 +265,29 @@ girls 	  N * @(CNP girl).
 gorilla   N * @(CNS gorilla).
 gorillas  N * @(CNP gorilla).
 
+Jordan    N * @(PN Jordan).
+
+monkey    N * @(CNS monkey).
+monkeys   N * @(CNP monkey).
+
 mouse 	  N * @(CNS mouse).
 mice 	  N * @(CNP mouse).
+
+Sam       N * @(PN Sam).
+
+table 	  N * @(CNS table).
+tables 	  N * @(CNP table).
+
+telescope N * @(CNS telescope).
+telescopes N * @(CNP telescope).
  
 treat 	  N * @(CNS treat).
 treats 	  N * @(CNP treat).
+
+waiter 	  N * @(CNS waiter).
+waiters   N * @(CNP waiter).
+
+zookeeper N * @(CNS zookeeper).
+zookeepers N * @(CNP zookeeper).
 
 ----
