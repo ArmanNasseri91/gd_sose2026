@@ -17,8 +17,9 @@ DEMO   ENGLISH   RULES (1.0)
 
  
    S --> NP: (^ SUBJ)=!
-	     (! CASE)=nom;
- 	 VP: ^=!.
+	      (! CASE)= nom;
+ 	 VP
+         (PERIOD).
 
    
    VP --> (AUX) 
@@ -28,13 +29,20 @@ DEMO   ENGLISH   RULES (1.0)
 	  (NP: (^ OBJ2)=!)           "optional indirect object" 
 	  PP*: { ! $ (^ ADJUNCT)      "PPs can be adjuncts"
 	        (! PTYPE) =c sem      "constraining equation: only semantic PPs here"
-                 | (^ OBL) = !        "or a a general oblique"
-                };
+                (! OBJ ANIM)=c +
+                 @(OT-MARK PPadj)
+                 |
+                 ! $ (^ ADJUNCT)      
+	        (! PTYPE) =c sem      
+                (! OBJ ANIM)=c -
+                 |
+                 (^ OBL) = !       "or a a general oblique"
+                @(OT-MARK PPadj) };
 	  (PP: (^ OBL-TO) = !
                 (! PFORM)=c to)      "oblique beneficiary for ditransitives"         
           (PP: (^ OBL-AG) = !
-	        (! PFORM)=c by).     "oblique agent of passive"
-   
+	        (! PFORM)=c by)      "oblique agent of passive"
+   	  AdvP*: ! $ (^ ADJUNCT).    "adverbs modifying verbs"
 
 
    PP --> { P: ^ = !            "head of PP"
@@ -47,21 +55,42 @@ DEMO   ENGLISH   RULES (1.0)
 	   NP
 	   }.  
 
-   NP --> (D)     "can leave out ^=!"
+"POSS PRONOUNS DO NOT WORK"
+   NP --> {
+          ({D                            "can leave out ^=!"
+            |
+             PRON: ^=!
+                   (!PRON-TYPE)=c poss})                       
 	  AP*: ! $ (^ ADJUNCT);     "introducing adjectives in sets"
 	  N                          "head of NP"
 	  PP*: ! $ (^ ADJUNCT)      "PPs modifying NPs"
-	  (! PTYPE) =c sem          "have to be semantic"
-          @(OT-MARK PPattach).
+	       (! PTYPE) =c sem          "have to be semantic"
+               @(OT-MARK PPattach);
+          |
+          PRON : ^=!
+                (!PRON-TYPE)=c pers
+            }.
  
- 
+  AP  --> AdvP*: ! $ (^ ADJUNCT);   "adverbs modifying adjectives"
+          (COMMA)
+          A.
+
+  AdvP --> Adv*: ! $ (^ ADJUNCT);   "adverbs modifying adverbs"
+          (COMMA)
+           Adv.
+
+  PRON --> Pron: ^ = !
+            {(!PRON-TYPE)=pers
+            |
+            (!PRON-TYPE)=poss}.
+
 
 ----
 
 DEMO ENGLISH TEMPLATES (1.0)
 
-  OT-MARK(_mark) =                   "assigns an OT mark"
-                 _mark $ o::*.
+  OT-MARK(_mark)= 
+                    _mark $ o::*.                                       
 
 
 "Passive lexical rule"
@@ -87,8 +116,8 @@ DAT-SHIFT(FRAME) = { FRAME
 
 "Template for 3sg"
 PRES3SG = (^ TENSE) = pres
-	(^ SUBJ PERS) = 3
-	(^ SUBJ NUM) = sg.
+	  (^ SUBJ PERS) = 3
+	  (^ SUBJ NUM) = sg.
 
 
 "Parameterised template for count nouns"
@@ -112,19 +141,35 @@ OPT-TRANS(P) = { @(INTRANS P) | @(TRANS P) }.
 
 DITRANS(P) = @(PASS @(DAT-SHIFT (^ PRED)='P<(^ SUBJ) (^ OBJ)(^ OBL-TO)>')).
 
-"template for most prepositions"
+"template for put"
+LOC(P) = @(PASS (^PRED) = 'P<(^ SUBJ)(^OBJ)(^OBL)>')
+         (^OBL PTYPE) = nosem.
+
+"template for prepositions"
 PREP(P) =  { (^ PRED) = 'P<(^OBJ)>'
 	   (^ PTYPE) = sem
 	   | (^ PTYPE) = nosem
 	   (^ PFORM) = P}.
 
+"template for advectives"
+AP(P) = (^PRED) = 'P'.
+
+"template for adverbs"
+Adv(P) = (^PRED) = 'P'.
+
+"template for personal pronouns"
+PRON(P) = (^PRED)='P'
+          (^PRON-TYPE)=pers.
+
+"template for possessive pronouns"
+POSS(P) = (^PRED)='P'
+          (^PRON-TYPE)=poss
+          (^CASE)= gen.
 
 ----
 
 DEMO ENGLISH LEXICON (1.0)
 
-
-"VERBS"
 
 is         V *  (^MOOD) = indicative
                 @PRES3SG
@@ -158,6 +203,11 @@ eats       V *  (^MOOD) = indicative
                @(OPT-TRANS eat)
                @PRES3SG.
 
+ate       V * (^MOOD) = indicative
+              (^TENSE)= past
+              @(OPT-TRANS eat).
+
+
 chase 	  V *  (^MOOD) = indicative
                @(TRANS chase).
                
@@ -172,6 +222,10 @@ sleeps    V *  (^ MOOD) = indicative
                @PRES3SG
                @(INTRANS sleep).
 
+slept    V * (^MOOD) = indicative
+             (^TENSE)= past
+             @(INTRANS sleep).
+
 sit      V *  (^ MOOD) = indicative
                @(INTRANS sit).
 
@@ -184,9 +238,16 @@ sat       V *  (^MOOD) = indicative
                 (^PARTICIPLE)= past }
 		@(INTRANS sit).
 
+appear    V *   @(INTRANS appear)
+	       (^ MOOD) = indicative.
+
 appears   V *   @(INTRANS appear)
 	       (^ MOOD) = indicative
                @PRES3SG.
+
+appeared   V *   @(INTRANS appear)
+	       (^ MOOD) = indicative
+               (^TENSE) = past.
 
 give      V *  (^MOOD) = indicative
 		@(DITRANS give).
@@ -213,7 +274,7 @@ waits      V *  (^MOOD) = indicative
 waited    V *  (^MOOD) = indicative
                {(^TENSE)= past |
                 (^PARTICIPLE)= past}
-		@(TRANS wait).
+                @(OPT-TRANS wait).
 		
 argue     V *  (^MOOD) = indicative
                @(TRANS argue).
@@ -253,8 +314,14 @@ saw        V * (^MOOD) = indicative
 seen       V * (^PARTICIPLE) = past
 		@(OPT-TRANS see).
 
+put        V * @(LOC put)
+               {(^TENSE)= present |
+                (^PARTICIPLE)= past}
+               (^MOOD) = indicative.
 
-
+puts       V * @(LOC put)
+               (^MOOD) = indicative
+               @PRES3SG.
 
 
 "NOUNS"
@@ -269,59 +336,88 @@ bone 	  N * (^PRED) = 'bone'
 
 dog 	  N * (^ PRED) = 'dog'
 	      (^ NUM) = sg
-	      (^ PERS) = 3. 
+	      (^ PERS) = 3
+              (^ANIM)=+.
 
 dogs 	  N * (^ PRED) = 'dog'
 	      (^ NUM) = pl
-	      (^ PERS) = 3. 
+	      (^ PERS) = 3
+              (^ANIM)=+.
 
-girl 	  N * @(CN girl).
+garden    N * @(CN garden).
 
-girls     N * @(CNPL girls).
+gardens   N *@(CNPL garden).
 
-gorilla   N * @(CN gorilla).
+girl 	  N * @(CN girl)
+               (^ANIM)=+.
 
-gorillas  N * @(CNPL gorillas).
+girls     N * @(CNPL girl)
+               (^ANIM)=+.
 
-cat       N * @(CN cat).
+gorilla   N * @(CN gorilla)
+              (^ANIM)=+.
 
-cats      N * @(CNPL cats).
+gorillas  N * @(CNPL gorilla)
+              (^ANIM)=+.
+
+cat       N * @(CN cat)
+              (^ANIM)=+.
+
+cats      N * @(CNPL cat)
+              (^ANIM)=+.
+
+cage      N * @(CN cage).
+
+cages     N * @(CNPL cage).
 
 banana    N * @(CN banana).
 
-bananas   N * @(CNPL bananas).
+bananas   N * @(CNPL banana).
 
 bench     N * @(CN bench).
 
-benches   N * @(CNPL benches). 
+benches   N * @(CNPL bench). 
 
-boy 	  N *  @(CN boy).
+boy 	  N *  @(CN boy)
+                (^ANIM)=+.
 
-boys      N * @(CNPL boys).
+boys      N * @(CNPL boy)
+              (^ANIM)=+.
 
 book 	  N *  @(CN book).
 
-books     N * @(CNPL books).
+books     N * @(CNPL book).
 
-monkey    N * @(CN monkey).
+hour      N * @(CN hour).
 
-monkeys   N * @(CNPL monkeys).
+hours     N * @(CNPL hour).
 
-mouse     N *  @(CN mouse).
+monkey    N * @(CN monkey) 
+              (^ANIM)=+.
 
-mice      N * @(CNPL mice).
+monkeys   N * @(CNPL monkey)
+              (^ANIM)=+.
+
+mouse     N *  @(CN mouse)
+               (^ANIM)=+.
+
+mice      N * @(CNPL mouse)
+              (^ANIM)=+.
 
 Alex      N * (^PRED) = 'Alex'
 		(^NUM) = sg
-		(^ PERS) = 3.
+		(^ PERS) = 3
+               (^ANIM)=+.
 
 Jordan    N * (^PRED) = 'Jordan'
 		(^NUM) = sg
-		(^ PERS) = 3.
+		(^ PERS) = 3
+                (^ANIM)=+.
 
 Sam       N * (^PRED)= 'Sam'
 		(^NUM) = sg
 		(^ PERS) = 3
+                (^ANIM)=+
 	      ~[(^DEF)].      "negative constraint" 
 
 table     N * @(CN table).
@@ -334,19 +430,144 @@ telescope N * @(CN telescope).
 
 telescopes N * @(CNPL telescopes).
 
-waiter    N *  @(CN waiter).
+waiter    N *  @(CN waiter)
+                (^ANIM)=+.
 
-waiters   N *  @(CNPL waiters).
+waiters   N *  @(CNPL waiters)
+                (^ANIM)=+.
 
-zookeeper  N * @(CN zookeeper).
+zookeeper  N * @(CN zookeeper)
+               (^ANIM)=+.
+
+
+"DETERMINERS"
 
 the  	  D *  (^ DEF) = +.
 
 a   	  D *  (^ DEF) = -.
 
+
+"ADJECTIVES"
+
+small    A * @(AP small).
+
+black    A * @(AP black).
+
+hungry   A * @(AP hungry).
+
+
+
+"ADVERBS"
+very      Adv * @(Adv very).
+
+quickly   Adv * @(Adv quickly).
+
+
+"PRONOUNS"
+
+I       Pron * @(PRON I)
+                (^PERS)=1
+                (^NUM)=sg
+                (^CASE)=nom.
+
+you     Pron * @(PRON you)
+                (^PERS)=2
+                {(^NUM)=sg
+                 | (^NUM)=pl}.
+
+he      Pron * @(PRON he)
+                (^PERS)=3
+                (^NUM)=sg
+                (^CASE)=nom.
+
+she     Pron * @(PRON she)
+                (^PERS)=3
+                (^NUM)=sg
+                (^CASE)=nom.
+
+it      Pron * @(PRON it)
+                (^PERS)=3
+                (^NUM)=sg.
+
+we      Pron * @(PRON we)
+                (^PERS)=1
+                (^NUM)=pl
+                 (^CASE)=nom.
+
+they   Pron * @(PRON they)
+                (^PERS)=3
+                (^NUM)=pl
+                (^CASE)=nom.
+
+me     Pron * @(PRON I)
+                (^PERS)=1
+                (^NUM)=sg
+                (^CASE)=acc.
+
+him    Pron * @(PRON he)
+                (^PERS)=3
+                (^NUM)=sg
+                (^CASE)=acc.
+
+her      Pron * @(PRON she)
+                (^PERS)=3
+                (^NUM)=sg
+                (^CASE)=acc.
+
+us      Pron * @(PRON we)
+                (^PERS)=1
+                (^NUM)=pl
+                (^CASE)=acc.
+
+them     Pron * @(PRON they)
+                (^PERS)=3
+                (^NUM)=pl
+                (^CASE)=acc.
+
+my      Pron  * @(POSS I)
+                (^PERS)=1
+                (^NUM)=sg.
+
+your     Pron  * @(POSS you)
+                (^PERS)=2
+               {(^NUM)=sg
+                 | (^NUM)=pl}.
+
+his      Pron  * @(POSS he)
+                (^PERS)=3
+                (^NUM)=sg.
+
+her       Pron  * @(POSS she)
+                (^PERS)=3
+                (^NUM)=sg.
+
+its       Pron  * @(POSS it)
+                (^PERS)=3
+                (^NUM)=sg.
+
+our       Pron  * @(POSS we)
+                (^PERS)=1
+                (^NUM)=pl.
+
+their     Pron  * @(POSS they)
+                (^PERS)=3
+                (^NUM)=pl.
+
+
+
+
+
+
 "PREPOSITIONS"
 
-by	P * @(PREP by).
+"by	P *  (^PRED)= 'by<( ^OBJ)>'
+              {(^ PTYPE)= sem
+              @(OT-MARK PPadj)
+              |
+              (^ PTYPE)= nosem
+               (^ PFORM)= by}."
+
+by      P * @(PREP by).
 
 to 	P * @(PREP to).
 
@@ -356,5 +577,12 @@ in 	P * @(PREP in).
 
 with 	P * @(PREP with).
 
+for     P * @(PREP for).
+
+
+
+.  PERIOD * .
+
+,  COMMA * .
 
 ----
