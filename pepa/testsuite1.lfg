@@ -178,7 +178,7 @@ she devoured it
 
 they devoured them
 
-#46 - I don't understand why this doesn't work????
+#46 - Pronoun in a PP works
 
 I waited for him for hours
 
@@ -190,23 +190,23 @@ my dog sleeps
 
 she gave us her banana
 
-#49 - No results because subject in accusative
+#49 - No solutions because subject in accusative
 
 him sleeps
 
-#50 - No results because subject in accusative
+#50 - No solutions because subject in accusative
 
 them devoured it
 
-#51 - No results because object in nominative
+#51 - No solutions because object in nominative
 
 they devoured they
 
-#52 - No results because PP in nominative
+#52 - No solutions because PP in nominative
 
 I waited for she for hours
 
-#53 - 2+4 results, which I don't understand why. It should give only 1. The tree remains the same. The only difference that I see is that in one of the results it mentions the case and in the other it doesn't.
+#53 - 2+4 solutions, which I don't understand why. It should give only 1. The tree remains the same. The only difference that I see is that in one of the results it mentions the case and in the other it doesn't.
 
 the dog was given a bone by the girl
 
@@ -214,34 +214,34 @@ the dog was given a bone by the girl
 
 a bone was given to the dog by the girl
 
-#55 - 1 result
+#55 - 1 solution
 
 the gorilla waited on the bench
 
-#56 - 1 result
+#56 - 1 solution
 
 the zookeeper waited on the gorilla
 
-#57 - 2 results: In general I have a problem with the verb "put" because it's neither transitive, nor ditransitive or intransitive. It has an object and an OBL which shows the location ("I put something somewhere"). So I created a template for "locative-transatives".
+#57 - 2 solutions: In general I have a problem with the verb "put" because it's neither transitive, nor ditransitive or intransitive. It has an object and an OBL which shows the location ("I put something somewhere"). So I created a template for "locative-transatives".
 
 the gorilla put the banana in the cage
 
-#58 - 1 result
+#58 - 1 solution
 
 the gorilla in the cage devoured a banana
 
-#59 - 1+1 results due to OT-marks
+#59 - 1+1 solutions due to OT-marks
 
 the gorilla devoured a banana in the cage
 
-#60 - 2+3 results: Again a problem with the verb "put" I think.
+#60 - 2+3 solutions: Again a problem with the verb "put" I think.
 
 a banana was put in the cage by the gorilla
 
-#61 - 1 result
+#61 - 1 solution
 
 the zookeeper waited by the bench
 
-#62 - 1+1 results due to OT-marks
+#62 - 1+1 solutions due to OT-marks
 
 the zookeeper waited by the bench in the garden
