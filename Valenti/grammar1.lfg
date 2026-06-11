@@ -497,26 +497,34 @@ very     ADV * (^ PRED) = 'very'.
 "Pronouns & Possessives"
 
 I      PRON * (^ PRED) = 'I'
-		(^ PERS) = 1
-              (^ NUM) = sg
-		@PRON-NOM.
+		@1-pers-SG		
+		@PRON-NOM
+		(^ ANIM) = +.
 
 he     PRON * (^ PRED) = 'he'
                @CN-SG 
-               @PRON-NOM.
+               @PRON-NOM
+		(^ ANIM) = +
+		(GEND-SEM) = male.
 
 He     PRON * (^ PRED) = 'he'
                @CN-SG 
                @PRON-NOM
+		(^ ANIM) = +
+		(GEND-SEM) = male
 	(^ CAPITAL) = +.
 
 she    PRON * (^ PRED) = 'she'
                @CN-SG 
-               @PRON-NOM.
+               @PRON-NOM
+		(GEND-SEM) = female
+		(^ ANIM) = +.
 
 She    PRON * (^ PRED) = 'she'
                @CN-SG 
                @PRON-NOM
+		(GEND-SEM) = female
+		(^ ANIM) = +
 	(^ CAPITAL) = +.
 
 they   PRON * (^ PRED) = 'they'
@@ -526,11 +534,12 @@ they   PRON * (^ PRED) = 'they'
 They   PRON * (^ PRED) = 'they'
                @CN-PL 
                @PRON-NOM
-	(^ CAPITAL) = +.
+		(^ CAPITAL) = +.
 
 him    PRON * (^ PRED) = 'he'
                @CN-SG
 		(^ ANIM) = +
+		(GEND-SEM) = male
                @PRON-ACC.
 
 it     PRON * (^ PRED) = 'it'
@@ -548,7 +557,8 @@ them   PRON * (^ PRED) = 'they'
 
 us     PRON * (^ PRED) = 'we'
                @1-pers-PL
-               @PRON-ACC.
+               @PRON-ACC
+		(^ ANIM) = +.
 
 my     D    * (^ SPEC POSS PRED) = 'I'
                (^ SPEC POSS PERS) = 1
