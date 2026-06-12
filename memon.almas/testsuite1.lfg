@@ -170,6 +170,41 @@ sam saw a monkey with a telescope
 
 the dog sat on the bench with a book
 
+the small dog slept
+
+the small black dog slept
+
+the small black hungry dog ate bones
+
+the gorilla devoured the banana quickly
+
+the small black hungry dog ate bones quickly
+
+the very small gorilla slept
+
+the very very very small gorilla slept
+
+he sleeps
+
+she devoured it
+
+they devoured them
+
+I waited for him for hours
+
+my dog sleeps
+
+she gave us her banana
+
+# bad cases
+
+him sleeps
+
+them devoured it
+
+they devoured they
+
+
 
 # 2 mismatches, 13 sentences, 0.022 CPU secs total, 0.009 CPU secs max (04/23/26)
 
